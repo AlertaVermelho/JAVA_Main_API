@@ -23,16 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
 
-// Visibilidade package-private (sem 'public' explícito)
 @Service
 class UsuarioServiceImpl implements IUsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager; // Para o processo de login
-    private final JwtTokenProvider jwtTokenProvider;         // Para gerar o token JWT
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    // Formatter para datas nas DTOs de resposta
     private static final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_INSTANT;
 
 
@@ -57,7 +55,6 @@ class UsuarioServiceImpl implements IUsuarioService {
         novoUsuario.setNome(dto.getNome());
         novoUsuario.setEmail(dto.getEmail());
         novoUsuario.setSenhaHash(passwordEncoder.encode(dto.getSenha()));
-        // dataCriacao e dataAtualizacao serão gerenciadas pelo @CreationTimestamp/@UpdateTimestamp
 
         Usuario usuarioSalvo = usuarioRepository.save(novoUsuario);
 
@@ -72,7 +69,6 @@ class UsuarioServiceImpl implements IUsuarioService {
 
     @Override
     public JwtResponseDTO loginUsuario(UsuarioLoginDTO dto) {
-        // O AuthenticationManager fará a validação da senha usando o UserDetailsService e PasswordEncoder configurados
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getSenha())
         );
@@ -80,8 +76,6 @@ class UsuarioServiceImpl implements IUsuarioService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtTokenProvider.generateToken(authentication);
 
-        // Após autenticação bem-sucedida, buscar o usuário para retornar seus dados
-        // O 'principal' aqui será o UserDetails carregado pelo seu UserDetailsServiceImpl
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Usuario usuario = usuarioRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado após login bem-sucedido: " + userDetails.getUsername()));
@@ -101,7 +95,6 @@ class UsuarioServiceImpl implements IUsuarioService {
     @Transactional(readOnly = true)
     public UsuarioResponseDTO getUsuarioAutenticado(UserDetails userPrincipal) {
         if (userPrincipal == null) {
-            // Isso não deveria acontecer se o endpoint estiver protegido corretamente
             throw new UsuarioNaoEncontradoException("Nenhum usuário autenticado encontrado.");
         }
         Usuario usuario = usuarioRepository.findByEmail(userPrincipal.getUsername())
@@ -119,8 +112,8 @@ class UsuarioServiceImpl implements IUsuarioService {
     @Override
     @Transactional
     public UsuarioResponseDTO atualizarUsuario(Long userId, UsuarioAtualizacaoDTO dto) {
-        Usuario usuario = buscarUsuarioPorId(userId); // Reusa o método para buscar e lançar exceção se não encontrar
 
+        Usuario usuario = buscarUsuarioPorId(userId);        
         boolean modificado = false;
 
         if (dto.getNome() != null && !dto.getNome().isBlank() && !dto.getNome().equals(usuario.getNome())) {
@@ -148,7 +141,6 @@ class UsuarioServiceImpl implements IUsuarioService {
         }
 
         if (modificado) {
-            // dataAtualizacao será atualizada automaticamente pelo @UpdateTimestamp
             usuario = usuarioRepository.save(usuario);
         }
 
@@ -169,12 +161,10 @@ class UsuarioServiceImpl implements IUsuarioService {
         if (notificationToken != null && !notificationToken.isBlank() && 
             (usuario.getTokenNotificacaoPush() == null || !usuario.getTokenNotificacaoPush().equals(notificationToken))) {
             usuario.setTokenNotificacaoPush(notificationToken);
-            usuarioRepository.save(usuario); // dataAtualizacao será atualizada
+            usuarioRepository.save(usuario);
         } else if ((notificationToken == null || notificationToken.isBlank()) && usuario.getTokenNotificacaoPush() != null) {
-            // Se um token nulo/vazio for enviado e o usuário tinha um token, remove o token.
             usuario.setTokenNotificacaoPush(null);
             usuarioRepository.save(usuario);
         }
-        // Se o token for o mesmo, não faz nada.
     }
 }

@@ -63,11 +63,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    /**
-     * Extrai o token JWT do cabeçalho Authorization da requisição.
-     * @param request A requisição HTTP.
-     * @return A string do token JWT (sem o prefixo "Bearer ") ou null se não encontrado.
-     */
     private String parseJwt(HttpServletRequest request) {
         String headerAuth = request.getHeader("Authorization");
 

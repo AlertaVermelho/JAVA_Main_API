@@ -23,7 +23,6 @@ public class UsuarioResponseDTO {
     @Schema(description = "Data e hora de criação do cadastro do usuário (formato ISO 8601).", example = "2025-06-01T20:30:00.123Z")
     private String dataCriacao;
 
-    // Para GET /users/me, você também incluiria dataAtualizacao
     @Schema(description = "Data e hora da última atualização do cadastro do usuário (formato ISO 8601).", example = "2025-06-01T20:35:00.456Z", nullable = true)
     private String dataAtualizacao;
 }
