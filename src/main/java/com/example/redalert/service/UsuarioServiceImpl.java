@@ -10,9 +10,8 @@ import com.example.redalert.exception.SenhaIncorretaException;
 import com.example.redalert.exception.UsuarioNaoEncontradoException;
 import com.example.redalert.model.Usuario;
 import com.example.redalert.repository.UsuarioRepository;
-import com.example.redalert.security.jwt.JwtTokenProvider; // Você precisará criar esta classe
+import com.example.redalert.security.jwt.JwtTokenProvider;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -37,7 +36,6 @@ class UsuarioServiceImpl implements IUsuarioService {
     private static final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_INSTANT;
 
 
-    @Autowired
     public UsuarioServiceImpl(UsuarioRepository usuarioRepository,
                               PasswordEncoder passwordEncoder,
                               AuthenticationManager authenticationManager,
