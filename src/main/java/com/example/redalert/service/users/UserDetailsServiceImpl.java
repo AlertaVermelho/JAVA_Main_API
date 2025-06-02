@@ -1,4 +1,4 @@
-package com.example.redalert.service;
+package com.example.redalert.service.users;
 
 import com.example.redalert.model.Usuario;
 import com.example.redalert.repository.UsuarioRepository;

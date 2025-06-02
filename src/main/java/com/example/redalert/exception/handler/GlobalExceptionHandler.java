@@ -1,9 +1,9 @@
 package com.example.redalert.exception.handler;
 
-import com.example.redalert.dto.ErrorResponseDTO;
-import com.example.redalert.exception.EmailJaCadastradoException;
-import com.example.redalert.exception.SenhaIncorretaException;
-import com.example.redalert.exception.UsuarioNaoEncontradoException;
+import com.example.redalert.dto.users.ErrorResponseDTO;
+import com.example.redalert.exception.users.EmailJaCadastradoException;
+import com.example.redalert.exception.users.SenhaIncorretaException;
+import com.example.redalert.exception.users.UsuarioNaoEncontradoException;
 
 import org.springframework.lang.NonNull;
 import org.springframework.http.HttpHeaders;

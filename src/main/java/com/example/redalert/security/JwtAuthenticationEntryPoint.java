@@ -1,6 +1,6 @@
 package com.example.redalert.security;
 
-import com.example.redalert.dto.ErrorResponseDTO;
+import com.example.redalert.dto.users.ErrorResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.ServletException;

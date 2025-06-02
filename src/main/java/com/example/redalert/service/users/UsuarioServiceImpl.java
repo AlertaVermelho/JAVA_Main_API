@@ -1,17 +1,17 @@
-package com.example.redalert.service;
+package com.example.redalert.service.users;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.example.redalert.dto.JwtResponseDTO;
-import com.example.redalert.dto.UsuarioAtualizacaoDTO;
-import com.example.redalert.dto.UsuarioLoginDTO;
-import com.example.redalert.dto.UsuarioRegistroDTO;
-import com.example.redalert.dto.UsuarioRegistroResponseDTO;
-import com.example.redalert.dto.UsuarioResponseDTO;
-import com.example.redalert.exception.EmailJaCadastradoException;
-import com.example.redalert.exception.SenhaIncorretaException;
-import com.example.redalert.exception.UsuarioNaoEncontradoException;
+import com.example.redalert.dto.users.JwtResponseDTO;
+import com.example.redalert.dto.users.UsuarioAtualizacaoDTO;
+import com.example.redalert.dto.users.UsuarioLoginDTO;
+import com.example.redalert.dto.users.UsuarioRegistroDTO;
+import com.example.redalert.dto.users.UsuarioRegistroResponseDTO;
+import com.example.redalert.dto.users.UsuarioResponseDTO;
+import com.example.redalert.exception.users.EmailJaCadastradoException;
+import com.example.redalert.exception.users.SenhaIncorretaException;
+import com.example.redalert.exception.users.UsuarioNaoEncontradoException;
 import com.example.redalert.model.Usuario;
 import com.example.redalert.repository.UsuarioRepository;
 import com.example.redalert.security.jwt.JwtTokenProvider;

@@ -1,10 +1,10 @@
-package com.example.redalert.controller;
+package com.example.redalert.controller.users;
 
-import com.example.redalert.dto.TokenResponseDTO;
-import com.example.redalert.dto.TokenNotificacaoDTO;
-import com.example.redalert.dto.UsuarioAtualizacaoDTO;
-import com.example.redalert.dto.UsuarioResponseDTO;
-import com.example.redalert.service.IUsuarioService;
+import com.example.redalert.dto.users.TokenNotificacaoDTO;
+import com.example.redalert.dto.users.TokenResponseDTO;
+import com.example.redalert.dto.users.UsuarioAtualizacaoDTO;
+import com.example.redalert.dto.users.UsuarioResponseDTO;
+import com.example.redalert.service.users.IUsuarioService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

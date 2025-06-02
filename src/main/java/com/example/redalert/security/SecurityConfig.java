@@ -1,7 +1,8 @@
 package com.example.redalert.security;
 
 import com.example.redalert.security.jwt.JwtRequestFilter;
-import com.example.redalert.service.UserDetailsServiceImpl;
+import com.example.redalert.service.users.UserDetailsServiceImpl;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

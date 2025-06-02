@@ -1,4 +1,4 @@
-package com.example.redalert.exception;
+package com.example.redalert.exception.users;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -1,11 +1,11 @@
-package com.example.redalert.service;
+package com.example.redalert.service.users;
 
-import com.example.redalert.dto.JwtResponseDTO;
-import com.example.redalert.dto.UsuarioAtualizacaoDTO;
-import com.example.redalert.dto.UsuarioLoginDTO;
-import com.example.redalert.dto.UsuarioRegistroDTO;
-import com.example.redalert.dto.UsuarioResponseDTO;
-import com.example.redalert.dto.UsuarioRegistroResponseDTO;
+import com.example.redalert.dto.users.JwtResponseDTO;
+import com.example.redalert.dto.users.UsuarioAtualizacaoDTO;
+import com.example.redalert.dto.users.UsuarioLoginDTO;
+import com.example.redalert.dto.users.UsuarioRegistroDTO;
+import com.example.redalert.dto.users.UsuarioRegistroResponseDTO;
+import com.example.redalert.dto.users.UsuarioResponseDTO;
 import com.example.redalert.model.Usuario;
 
 public interface IUsuarioService {

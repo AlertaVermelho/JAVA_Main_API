@@ -1,4 +1,4 @@
-package com.example.redalert.dto;
+package com.example.redalert.dto.users;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

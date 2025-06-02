@@ -1,7 +1,7 @@
 package com.example.redalert.security.jwt;
 
 import com.example.redalert.config.JwtProperties;
-import com.example.redalert.exception.JwtSecretNaoConfiguradoException;
+import com.example.redalert.exception.users.JwtSecretNaoConfiguradoException;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
