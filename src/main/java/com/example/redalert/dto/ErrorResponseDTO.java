@@ -7,10 +7,13 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL) 
 @Schema(description = "DTO padrão para respostas de erro da API.")
 public class ErrorResponseDTO {
 
@@ -28,10 +31,7 @@ public class ErrorResponseDTO {
 
     @Schema(description = "Caminho da URI que originou o erro.", example = "/auth/register", requiredMode = Schema.RequiredMode.REQUIRED)
     private String path;
-
-    @Schema(description = "Lista de erros de validação específicos de campos (presente para erros de validação HTTP 400).", 
-            nullable = true, 
-            example = "[{\"field\": \"email\", \"message\": \"Formato de email inválido.\"}, {\"field\": \"senha\", \"message\": \"Senha deve ter no mínimo 8 caracteres.\"}]")
+    
     private List<Map<String, String>> errors;
 
     public ErrorResponseDTO(Instant timestamp, int status, String error, String message, String path) {

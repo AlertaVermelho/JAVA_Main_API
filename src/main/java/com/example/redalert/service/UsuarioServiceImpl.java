@@ -1,9 +1,13 @@
 package com.example.redalert.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.example.redalert.dto.JwtResponseDTO;
 import com.example.redalert.dto.UsuarioAtualizacaoDTO;
 import com.example.redalert.dto.UsuarioLoginDTO;
 import com.example.redalert.dto.UsuarioRegistroDTO;
+import com.example.redalert.dto.UsuarioRegistroResponseDTO;
 import com.example.redalert.dto.UsuarioResponseDTO;
 import com.example.redalert.exception.EmailJaCadastradoException;
 import com.example.redalert.exception.SenhaIncorretaException;
@@ -33,6 +37,7 @@ class UsuarioServiceImpl implements IUsuarioService {
 
     private static final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_INSTANT;
 
+    private static final Logger logger = LoggerFactory.getLogger(UsuarioServiceImpl.class);
 
     public UsuarioServiceImpl(UsuarioRepository usuarioRepository,
                               PasswordEncoder passwordEncoder,
@@ -46,7 +51,7 @@ class UsuarioServiceImpl implements IUsuarioService {
 
     @Override
     @Transactional
-    public UsuarioResponseDTO registrarUsuario(UsuarioRegistroDTO dto) {
+    public UsuarioRegistroResponseDTO registrarUsuario(UsuarioRegistroDTO dto) {
         if (usuarioRepository.existsByEmail(dto.getEmail())) {
             throw new EmailJaCadastradoException("O email '" + dto.getEmail() + "' já está cadastrado.");
         }
@@ -56,14 +61,20 @@ class UsuarioServiceImpl implements IUsuarioService {
         novoUsuario.setEmail(dto.getEmail());
         novoUsuario.setSenhaHash(passwordEncoder.encode(dto.getSenha()));
 
-        Usuario usuarioSalvo = usuarioRepository.save(novoUsuario);
+        Usuario usuarioSalvo = usuarioRepository.saveAndFlush(novoUsuario);
 
-        return new UsuarioResponseDTO(
-                usuarioSalvo.getId(),
-                usuarioSalvo.getNome(),
-                usuarioSalvo.getEmail(),
-                ISO_FORMATTER.format(usuarioSalvo.getDataCriacao()),
-                ISO_FORMATTER.format(usuarioSalvo.getDataAtualizacao())
+        String dataCriacaoFormatada = null;
+        if (usuarioSalvo.getDataCriacao() != null) {
+            dataCriacaoFormatada = ISO_FORMATTER.format(usuarioSalvo.getDataCriacao());
+        } else {
+            logger.warn("dataCriacao é nula para o usuário recém-salvo ID: {}", usuarioSalvo.getId());
+        }
+
+        return new UsuarioRegistroResponseDTO(
+            usuarioSalvo.getId(),
+            usuarioSalvo.getNome(),
+            usuarioSalvo.getEmail(),
+            dataCriacaoFormatada        
         );
     }
 
@@ -100,12 +111,15 @@ class UsuarioServiceImpl implements IUsuarioService {
         Usuario usuario = usuarioRepository.findByEmail(userPrincipal.getUsername())
                 .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário autenticado '" + userPrincipal.getUsername() + "' não encontrado no banco de dados."));
 
+        String dataCriacaoFormatada = usuario.getDataCriacao() != null ? ISO_FORMATTER.format(usuario.getDataCriacao()) : null;
+        String dataAtualizacaoFormatada = usuario.getDataAtualizacao() != null ? ISO_FORMATTER.format(usuario.getDataAtualizacao()) : null;
+
         return new UsuarioResponseDTO(
-                usuario.getId(),
-                usuario.getNome(),
-                usuario.getEmail(),
-                ISO_FORMATTER.format(usuario.getDataCriacao()),
-                ISO_FORMATTER.format(usuario.getDataAtualizacao())
+            usuario.getId(),
+            usuario.getNome(),
+            usuario.getEmail(),
+            dataCriacaoFormatada,
+            dataAtualizacaoFormatada
         );
     }
 
@@ -145,11 +159,11 @@ class UsuarioServiceImpl implements IUsuarioService {
         }
 
         return new UsuarioResponseDTO(
-                usuario.getId(),
-                usuario.getNome(),
-                usuario.getEmail(),
-                ISO_FORMATTER.format(usuario.getDataCriacao()),
-                ISO_FORMATTER.format(usuario.getDataAtualizacao())
+            usuario.getId(),
+            usuario.getNome(),
+            usuario.getEmail(),
+            ISO_FORMATTER.format(usuario.getDataCriacao()),
+            ISO_FORMATTER.format(usuario.getDataAtualizacao())
         );
     }
 

@@ -5,11 +5,12 @@ import com.example.redalert.dto.UsuarioAtualizacaoDTO;
 import com.example.redalert.dto.UsuarioLoginDTO;
 import com.example.redalert.dto.UsuarioRegistroDTO;
 import com.example.redalert.dto.UsuarioResponseDTO;
+import com.example.redalert.dto.UsuarioRegistroResponseDTO;
 import com.example.redalert.model.Usuario;
 
 public interface IUsuarioService {
 
-    UsuarioResponseDTO registrarUsuario(UsuarioRegistroDTO usuarioRegistroDTO); 
+    UsuarioRegistroResponseDTO registrarUsuario(UsuarioRegistroDTO usuarioRegistroDTO); 
     JwtResponseDTO loginUsuario(UsuarioLoginDTO usuarioLoginDTO);
     UsuarioResponseDTO getUsuarioAutenticado(org.springframework.security.core.userdetails.UserDetails userPrincipal); 
     Usuario buscarUsuarioPorId(Long id);

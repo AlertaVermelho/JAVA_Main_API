@@ -3,7 +3,7 @@ package com.example.redalert.controller;
 import com.example.redalert.dto.JwtResponseDTO;
 import com.example.redalert.dto.UsuarioLoginDTO;
 import com.example.redalert.dto.UsuarioRegistroDTO;
-import com.example.redalert.dto.UsuarioResponseDTO;
+import com.example.redalert.dto.UsuarioRegistroResponseDTO;
 import com.example.redalert.service.IUsuarioService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,8 +30,8 @@ public class AuthController {
     @Operation(summary = "Registra um novo usuário no sistema",
                description = "Cria um novo usuário com nome, email e senha. O email deve ser único.")
     @PostMapping("/register")
-    public ResponseEntity<UsuarioResponseDTO> registrarUsuario(@Valid @RequestBody UsuarioRegistroDTO usuarioRegistroDTO) {
-        UsuarioResponseDTO novoUsuario = usuarioService.registrarUsuario(usuarioRegistroDTO);
+    public ResponseEntity<UsuarioRegistroResponseDTO> registrarUsuario(@Valid @RequestBody UsuarioRegistroDTO usuarioRegistroDTO) {
+        UsuarioRegistroResponseDTO novoUsuario = usuarioService.registrarUsuario(usuarioRegistroDTO);
         return new ResponseEntity<>(novoUsuario, HttpStatus.CREATED);
     }
 

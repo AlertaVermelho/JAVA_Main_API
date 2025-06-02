@@ -1,5 +1,6 @@
 package com.example.redalert.controller;
 
+import com.example.redalert.dto.TokenResponseDTO;
 import com.example.redalert.dto.TokenNotificacaoDTO;
 import com.example.redalert.dto.UsuarioAtualizacaoDTO;
 import com.example.redalert.dto.UsuarioResponseDTO;
@@ -53,14 +54,16 @@ public class UserController {
     @Operation(summary = "Atualiza o token de notificação push do usuário autenticado.",
                description = "Registra ou atualiza o token do dispositivo do usuário para o envio de notificações push, conforme o contrato 1.5.")
     @PutMapping("/me/notification-token")
-    public ResponseEntity<Void> atualizarTokenNotificacao(
+    public ResponseEntity<TokenResponseDTO> atualizarTokenNotificacao(
             @Parameter(hidden = true) @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody TokenNotificacaoDTO tokenNotificacaoDTO) {
         
         UsuarioResponseDTO usuarioLogadoInfo = usuarioService.getUsuarioAutenticado(userDetails);
         Long userId = usuarioLogadoInfo.getId();
 
+        TokenResponseDTO responseBody = new TokenResponseDTO("Token de notificação atualizado com sucesso.");
+
         usuarioService.atualizarTokenNotificacao(userId, tokenNotificacaoDTO.getNotificationToken());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(responseBody);
     }
 }
