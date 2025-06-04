@@ -130,7 +130,7 @@ class AlertaUsuarioServiceImpl implements IAlertaUsuarioService {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("longitude"), filtros.getMaxLon()));
             }
 
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
         };
 
         Page<AlertaUsuario> paginaAlertas = alertaUsuarioRepository.findAll(spec, pageable);
@@ -143,27 +143,35 @@ class AlertaUsuarioServiceImpl implements IAlertaUsuarioService {
             return null;
         }
 
-        Double latitudeDto = null;
-        if (alerta.getLatitude() != null) {
-            latitudeDto = alerta.getLatitude().doubleValue();
+        Long idDoHotspot = null;
+        if (alerta.getHotspotAssociado() != null) {
+            idDoHotspot = alerta.getHotspotAssociado().getId();
         }
 
-        Double longitudeDto = null;
-        if (alerta.getLongitude() != null) {
-            longitudeDto = alerta.getLongitude().doubleValue();
-        }
+        // Double latitudeDto = null;
+        // if (alerta.getLatitude() != null) {
+        //     latitudeDto = alerta.getLatitude().doubleValue();
+        // }
+
+        // Double longitudeDto = null;
+        // if (alerta.getLongitude() != null) {
+        //     longitudeDto = alerta.getLongitude().doubleValue();
+        // }
+
+        Double latitudeDto = (alerta.getLatitude() != null) ? alerta.getLatitude().doubleValue() : null;
+        Double longitudeDto = (alerta.getLongitude() != null) ? alerta.getLongitude().doubleValue() : null;
 
         return new AlertaResponseDTO(
-                alerta.getId(),
-                alerta.getUsuarioReportou() != null ? alerta.getUsuarioReportou().getId() : null,
-                alerta.getDescricaoTexto(),
-                latitudeDto,
-                longitudeDto,
-                alerta.getTimestampReporte() != null ? ISO_FORMATTER.format(alerta.getTimestampReporte()) : null,
-                alerta.getStatusAlerta(),
-                alerta.getSeveridadeIA(),
-                alerta.getTipoIA(),
-                alerta.getIdHotspotAssociado()
+            alerta.getId(),
+            alerta.getUsuarioReportou() != null ? alerta.getUsuarioReportou().getId() : null,
+            alerta.getDescricaoTexto(),
+            latitudeDto,
+            longitudeDto,
+            alerta.getTimestampReporte() != null ? ISO_FORMATTER.format(alerta.getTimestampReporte()) : null,
+            alerta.getStatusAlerta(),
+            alerta.getSeveridadeIA(),
+            alerta.getTipoIA(),
+            idDoHotspot 
         );
     }
 }

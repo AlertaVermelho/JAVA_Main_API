@@ -64,11 +64,11 @@ public class AlertaUsuario {
     @Column(name = "tipo_ia", length = 30, nullable = true)
     private String tipoIA;
 
-    @Column(name = "id_hotspot_associado", nullable=true)
-    private Long idHotspotAssociado;
+    // @Column(name = "id_hotspot_associado", nullable=true)
+    // private Long idHotspotAssociado;
 
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "id_hotspot_associado", nullable = true)
-    // private HotspotsEventos hotspotAssociado;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_hotspot_associado", nullable = true)
+    private HotspotsEventos hotspotAssociado;
 
 }
