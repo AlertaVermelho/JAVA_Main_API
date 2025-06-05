@@ -109,6 +109,7 @@ O `Dockerfile` na raiz deste projeto permite construir uma imagem Docker para es
 
 4.  **Exemplos de Comandos `docker run` para a API Java:**
     * Este comando assume que os containers do Oracle (`oracle-db-container`) e da API Python (`python-api-container`) já estão rodando na rede `alerta-agil-net` em virtual machine provisionada na Azure.
+
     ```bash
     docker run -d -p 8074:8074 \
       --name java-api-container \
@@ -125,6 +126,11 @@ O `Dockerfile` na raiz deste projeto permite construir uma imagem Docker para es
     **Importante:** Substitua os valores das variáveis de ambiente (`SuaSenhaDoOracleContainer`, `SEU_JWT_SECRET_FORTE_PARA_PRODUCAO_EM_BASE64`, etc.) pelos valores corretos para seu ambiente de container.
 
     * Este comando assume que apenas o container JAVA irá rodar, que a conexão com o banco é feita de maneira remota e a URL da API Python foi configurada como: `https://pypredapi-production.up.railway.app`
+
+    ```bash
+    docker build -t redalert-java-api:latest .
+    ```
+
      ```bash
     docker run -d -p 8074:8074 \
       --name java-api-container \
@@ -205,6 +211,6 @@ O projeto segue uma estrutura padrão de aplicações Spring Boot, organizada em
 
 
 ## 9. Vídeos
-* Demonstração: 
+* Demonstração: https://youtu.be/1qufas2rF8s
 * Pitch: 
 ---
