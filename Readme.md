@@ -137,6 +137,11 @@ O `Dockerfile` na raiz deste projeto permite construir uma imagem Docker para es
       -e PYTHON_AI_API_BASE_URL="https://pypredapi-production.up.railway.app" \
       redalert-java-api:latest
     ```
+
+### 5.2. Rodando com URL do deploy (`https://active-opaline-redalert-cdce0187.koyeb.app/`)
+    * Acesse o swagger em: ´https://active-opaline-redalert-cdce0187.koyeb.app/swagger-ui/index.html´
+    * Ou substitua o valor da key "BASE_URL" em (test_scripts/RedAlertl-Dev-Env.postman_environment.json) para: "value": "https://active-opaline-redalert-cdce0187.koyeb.app" (sem a barra no final) antes de importar par o Postman
+
 ## 6. API Python de IA (Interdependência)
 
 Esta API Java depende de um serviço externo de Inteligência Artificial (API Python) para:
