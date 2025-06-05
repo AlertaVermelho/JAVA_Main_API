@@ -1,7 +1,7 @@
 package com.example.redalert.security;
 
-import com.example.redalert.security.jwt.JwtRequestFilter;
-import com.example.redalert.service.users.UserDetailsServiceImpl;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,8 +20,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
-import java.util.List;
+import com.example.redalert.security.jwt.JwtRequestFilter;
+import com.example.redalert.service.users.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -74,7 +74,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8100", "capacitor://localhost", "http://localhost"));
+        config.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8100", "capacitor://localhost", "http://localhost", "https://active-opaline-redalert-cdce0187.koyeb.app", "https://pypredapi-production.up.railway.app"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
         config.setAllowCredentials(true);
