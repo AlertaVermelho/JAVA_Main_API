@@ -153,8 +153,24 @@ Uma visão geral dos principais grupos de endpoints. A documentação completa e
 * **`/mapdata`**:
     * `GET /mapdata`: Retorna dados agregados (hotspots e alertas públicos) para o mapa.
 
-**Documentação Interativa (Swagger UI):**
+**Documentação Interativa (Swagger UI) e Testes:**
+* Testando com Swagger:
 Após iniciar a aplicação, acesse: `http://localhost:8074/swagger-ui.html` (ou a porta e IP corretos se rodando na VM).
+
+* Testando com postman:
+Além da documentação interativa via Swagger UI, você pode utilizar o Postman para realizar testes nos endpoints da API.
+Os arquivos necessários para importação no Postman estão localizados na pasta /test_scripts (na raiz deste repositório da API Java):
+
+1. Coleção: test_scripts/RedAlert - API Java Tests.postman_collection.json
+Contém um conjunto de requisições pré-definidas para testar o fluxo de autenticação, gerenciamento de usuários, criação e listagem de alertas, e a consulta de dados para o mapa. Inclui scripts de teste básicos para verificar os status das respostas e para extrair/definir variáveis de ambiente (como tokens JWT e IDs de usuário/alerta) para encadear as requisições.
+2. Ambiente: test_scripts/RedAlert - Environment.postman_environment.json
+Contém variáveis de ambiente utilizadas pela coleção, como {{BASE_URL}}. Outras variáveis (ex: {{USER_A_TOKEN}}, {{ALERT_ID}}) serão populadas dinamicamente pelos scripts de teste dentro da coleção durante a execução.
+
+* Como Importar no Postman
+    * Abra o Postman.
+    * Importe a Coleção: Selecione o arquivo RedAlert - API Java Tests.postman_collection.json.
+    * Importe o Ambiente: Selecione o arquivo RedAlert - Environment.postman_environment.json.
+    * Execute as Requisições
 
 ## 8. Estrutura do Projeto Java
 
