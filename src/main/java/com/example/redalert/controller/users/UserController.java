@@ -66,4 +66,14 @@ public class UserController {
         usuarioService.atualizarTokenNotificacao(userId, tokenNotificacaoDTO.getNotificationToken());
         return ResponseEntity.ok(responseBody);
     }
+
+    @Operation(summary = "Exclui permanentemente a conta do usuário autenticado (hard delete).",
+               description = "Tenta remover o registro do usuário do banco de dados. Falhará com um erro 409 (Conflict) se o usuário tiver alertas associados.")
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deletarMinhaConta(
+            @Parameter(hidden = true) @AuthenticationPrincipal UserDetails userDetails) {
+        
+        usuarioService.deletarMinhaContaHard(userDetails);
+        return ResponseEntity.noContent().build();
+    }
 }

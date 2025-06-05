@@ -9,6 +9,7 @@ import com.example.redalert.exception.users.UsuarioNaoEncontradoException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -111,6 +112,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 ((ServletWebRequest)request).getRequest().getRequestURI()
         );
         globalLogger.error("AIServiceException: {} para o request {}", ex.getMessage(), ((ServletWebRequest)request).getRequest().getRequestURI(), ex);
+        return new ResponseEntity<>(errorResponse, status);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponseDTO> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        String mensagem = "Operação não pôde ser concluída devido a uma restrição de integridade de dados. " +
+                          "Por exemplo, você pode estar tentando excluir um usuário que ainda possui alertas associados.";
+        if (ex.getMessage().toLowerCase().contains("child record found") || 
+            (ex.getCause() != null && ex.getCause().getMessage().toLowerCase().contains("ora-02292"))) {
+            mensagem = "Não foi possível excluir o usuário pois existem registros dependentes (como alertas) associados a esta conta.";
+        }        
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+                Instant.now(),
+                status.value(),
+                status.getReasonPhrase(),
+                mensagem,
+                ((ServletWebRequest)request).getRequest().getRequestURI()
+        );
+        globalLogger.warn("DataIntegrityViolationException: {} para o request {}", ex.getMessage(), ((ServletWebRequest)request).getRequest().getRequestURI());
         return new ResponseEntity<>(errorResponse, status);
     }
     

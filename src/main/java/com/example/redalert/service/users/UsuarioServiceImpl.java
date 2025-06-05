@@ -16,6 +16,7 @@ import com.example.redalert.model.Usuario;
 import com.example.redalert.repository.UsuarioRepository;
 import com.example.redalert.security.jwt.JwtTokenProvider;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -179,6 +180,28 @@ class UsuarioServiceImpl implements IUsuarioService {
         } else if ((notificationToken == null || notificationToken.isBlank()) && usuario.getTokenNotificacaoPush() != null) {
             usuario.setTokenNotificacaoPush(null);
             usuarioRepository.save(usuario);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deletarMinhaContaHard(UserDetails userPrincipal) {
+        if (userPrincipal == null || userPrincipal.getUsername() == null) {
+            throw new IllegalStateException("UserDetails ou username não pode ser nulo para deletar conta.");
+        }
+        String emailUsuario = userPrincipal.getUsername();
+        Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário autenticado '" + emailUsuario + "' não encontrado para exclusão."));
+
+        try {
+            // Regra de negócio só excluir de fato o usuario se ele não tiver alertas associados
+            usuarioRepository.deleteById(usuario.getId());
+            logger.info("Usuário ID {} (Email: {}) excluído permanentemente (hard delete).", usuario.getId(), emailUsuario);
+        } catch (DataIntegrityViolationException e) {
+            logger.warn("Falha ao tentar excluir usuário ID {} (Email: {}). Provavelmente devido a alertas existentes. Erro: {}", 
+                        usuario.getId(), emailUsuario, e.getMessage());
+            throw new DataIntegrityViolationException(
+                "Não foi possível excluir o usuário. Verifique se existem alertas associados a esta conta.", e);
         }
     }
 }

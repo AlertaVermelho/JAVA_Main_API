@@ -1,5 +1,7 @@
 package com.example.redalert.service.users;
 
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.example.redalert.dto.users.JwtResponseDTO;
 import com.example.redalert.dto.users.UsuarioAtualizacaoDTO;
 import com.example.redalert.dto.users.UsuarioLoginDTO;
@@ -16,4 +18,5 @@ public interface IUsuarioService {
     Usuario buscarUsuarioPorId(Long id);
     UsuarioResponseDTO atualizarUsuario(Long userId, UsuarioAtualizacaoDTO usuarioAtualizacaoDTO);
     void atualizarTokenNotificacao(Long userId, String notificationToken);
+    void deletarMinhaContaHard(UserDetails userPrincipal);
 }
