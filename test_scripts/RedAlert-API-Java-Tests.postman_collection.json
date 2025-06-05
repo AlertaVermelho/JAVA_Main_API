@@ -26,7 +26,7 @@
                 },
                 "body": {
                     "mode": "raw",
-                    "raw": "{\n  \"nome\": \"Usuário Alpha\",\n  \"email\": \"alpha@example.com\",\n  \"senha\": \"PasswordAlpha123!\"\n}"
+                    "raw": "{\n  \"nome\": \"Usuário Beta\",\n  \"email\": \"beta@example.com\",\n  \"senha\": \"PasswordBeta123!\"\n}"
                 }
             },
             "event": [
@@ -40,8 +40,8 @@
                             "pm.test(\"Response body contains user ID, nome, email\", function () {",
                             "    var jsonData = pm.response.json();",
                             "    pm.expect(jsonData.id).to.be.a('number');",
-                            "    pm.expect(jsonData.nome).to.eql(\"Usuário Alpha\");",
-                            "    pm.expect(jsonData.email).to.eql(\"alpha@example.com\");",
+                            "    pm.expect(jsonData.nome).to.eql(\"Usuário Beta\");",
+                            "    pm.expect(jsonData.email).to.eql(\"beta@example.com\");",
                             "    pm.environment.set(\"USER_A_ID\", jsonData.id);",
                             "});"
                         ],
@@ -72,7 +72,7 @@
                 },
                 "body": {
                     "mode": "raw",
-                    "raw": "{\n  \"email\": \"alpha@example.com\",\n  \"senha\": \"PasswordAlpha123!\"\n}"
+                    "raw": "{\n  \"email\": \"beta@example.com\",\n  \"senha\": \"PasswordBeta123!\"\n}"
                 }
             },
             "event": [
@@ -127,7 +127,7 @@
                             "pm.test(\"Response body contains correct user details\", function () {",
                             "    var jsonData = pm.response.json();",
                             "    pm.expect(jsonData.id).to.eql(parseInt(pm.environment.get(\"USER_A_ID\")));",
-                            "    pm.expect(jsonData.email).to.eql(\"alpha@example.com\");",
+                            "    pm.expect(jsonData.email).to.eql(\"beta@example.com\");",
                             "});"
                         ],
                         "type": "text/javascript"
@@ -161,7 +161,7 @@
                 },
                 "body": {
                     "mode": "raw",
-                    "raw": "{\n  \"email\": \"alpha.novo@example.com\",\n  \"nome\": \"Alpha Modificado\"\n}"
+                    "raw": "{\n  \"email\": \"beta.novo@example.com\",\n  \"nome\": \"Beta Modificado\"\n}"
                 }
             },
             "event": [
@@ -175,7 +175,52 @@
                             "pm.test(\"Response indicates successful update\", function () {",
                             "    var jsonData = pm.response.json();",
                             "    pm.expect(jsonData.message).to.eql(\"Perfil atualizado com sucesso.\");",
-                            "    pm.expect(jsonData.email).to.eql(\"alpha.novo@example.com\");",
+                            "    pm.expect(jsonData.email).to.eql(\"beta.novo@example.com\");",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ]
+        },
+         {
+            "name": "1.4.1 - Novo Login Usuário A",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{BASE_URL}}/auth/login",
+                    "host": [
+                        "{{BASE_URL}}"
+                    ],
+                    "path": [
+                        "auth",
+                        "login"
+                    ]
+                },
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"email\": \"beta.novo@example.com\",\n  \"senha\": \"PasswordBeta123!\"\n}"
+                }
+            },
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200 OK\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "pm.test(\"Response body contains JWT token\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.token).to.be.a('string');",
+                            "    pm.environment.set(\"USER_A_TOKEN\", jsonData.token);",
+                            "    if(jsonData.userId) { pm.environment.set(\"USER_A_ID\", jsonData.userId); }",
                             "});"
                         ],
                         "type": "text/javascript"
@@ -242,7 +287,7 @@
                 },
                 "body": {
                     "mode": "raw",
-                    "raw": "{\n  \"nome\": \"Usuário Beta\",\n  \"email\": \"beta@example.com\",\n  \"senha\": \"PasswordBeta456!\"\n}"
+                    "raw": "{\n  \"nome\": \"Usuário Gamma\",\n  \"email\": \"gamma@example.com\",\n  \"senha\": \"PasswordGamma456!\"\n}"
                 }
             },
             "event": [
@@ -283,7 +328,7 @@
                 },
                 "body": {
                     "mode": "raw",
-                    "raw": "{\n  \"email\": \"beta@example.com\",\n  \"senha\": \"PasswordBeta456!\"\n}"
+                    "raw": "{\n  \"email\": \"gamma@example.com\",\n  \"senha\": \"PasswordGamma456!\"\n}"
                 }
             },
             "event": [
