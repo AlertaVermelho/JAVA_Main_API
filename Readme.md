@@ -77,7 +77,7 @@ Siga estes passos para configurar seu ambiente local:
 
 1.  **Pré-requisitos:**
     * Garanta que seu Banco de Dados Oracle esteja acessível e com o schema criado (`schema_oracle.sql`).
-    * Garanta que a API Python de IA esteja rodando localmente (ex: em `http://127.0.0.1:8000`).
+    * Garanta que a API Python de IA esteja rodando localmente (ex: em `http://127.0.0.1:8000`) ou utilize a URL de deploy (`https://pypredapi-production.up.railway.app`).
     * Configure corretamente seu arquivo `.env` com as URLs e credenciais.
     * Certifique-se de que o `application.properties` está com `spring.profiles.active=prod` e que o `application-dev.properties` está configurado para seu Oracle local.
 
@@ -99,16 +99,16 @@ O `Dockerfile` na raiz deste projeto permite construir uma imagem Docker para es
     ```
 
 2.  **Pré-requisitos para Rodar o Container Java:**
-    * Um container do **Oracle DB** precisa estar rodando e acessível na mesma rede Docker.
-    * Um container da **API Python de IA** precisa estar rodando e acessível na mesma rede Docker.
+    * Um container do **Oracle DB** precisa estar rodando e acessível na mesma rede Docker, ou conecte-se diretamente ao banco hospedado em produção.
+    * Um container da **API Python de IA** precisa estar rodando e acessível na mesma rede Docker, ou configure a URL da variável de ambiente como a URL da API em núvem (`https://pypredapi-production.up.railway.app`).
 
-3.  **Criar uma Rede Docker (se ainda não existe):**
+3.  **(OPCIONAL caso tenha optado por subir os 3 containeres) Criar uma Rede Docker:**
     ```bash
     docker network create alerta-agil-net
     ```
 
-4.  **Exemplo de Comando `docker run` para a API Java:**
-    Este comando assume que os containers do Oracle (`oracle-db-container`) e da API Python (`python-api-container`) já estão rodando na rede `alerta-agil-net`.
+4.  **Exemplos de Comandos `docker run` para a API Java:**
+    * Este comando assume que os containers do Oracle (`oracle-db-container`) e da API Python (`python-api-container`) já estão rodando na rede `alerta-agil-net` em virtual machine provisionada na Azure.
     ```bash
     docker run -d -p 8074:8074 \
       --name java-api-container \
@@ -117,13 +117,26 @@ O `Dockerfile` na raiz deste projeto permite construir uma imagem Docker para es
       -e DB_PROD_URL="jdbc:oracle:thin:@oracle-db-container:1521/XEPDB1" \
       -e DB_USERNAME="SYSTEM" \
       -e DB_PASSWORD="SuaSenhaDoOracleContainer" \
-      -e JWT_SECRET="SEU_JWT_SECRET_FORTE_PARA_PRODUCAO_EM_BASE64" \
+      -e JWT_SECRET="JWT_SECRET_EM_BASE64" \
       -e JWT_EXPIRATION_MS="86400000" \
       -e PYTHON_AI_API_BASE_URL="http://python-api-container:8000" \
       redalert-java-api:latest
     ```
-    * **Importante:** Substitua os valores das variáveis de ambiente (`SuaSenhaDoOracleContainer`, `SEU_JWT_SECRET_FORTE_PARA_PRODUCAO_EM_BASE64`, etc.) pelos valores corretos para seu ambiente de container.
+    **Importante:** Substitua os valores das variáveis de ambiente (`SuaSenhaDoOracleContainer`, `SEU_JWT_SECRET_FORTE_PARA_PRODUCAO_EM_BASE64`, etc.) pelos valores corretos para seu ambiente de container.
 
+    * Este comando assume que apenas o container JAVA irá rodar, que a conexão com o banco é feita de maneira remota e a URL da API Python foi configurada como: `https://pypredapi-production.up.railway.app`
+     ```bash
+    docker run -d -p 8074:8074 \
+      --name java-api-container \
+      -e SPRING_PROFILES_ACTIVE="prod" \
+      -e DB_PROD_URL="sua URL do banco, no formato jdbc:oracle:thin:@//HOST:PORTA/SID" \
+      -e DB_USERNAME="USUARIO_DO_BANCO" \
+      -e DB_PASSWORD="SENHA_DO_BANCO" \
+      -e JWT_SECRET="JWT_SECRET_EM_BASE64" \
+      -e JWT_EXPIRATION_MS="TEMPO_EXPIRAÇÃO_TOKEN_JWY_EM_MILISEGUNDOS" \
+      -e PYTHON_AI_API_BASE_URL="https://pypredapi-production.up.railway.app" \
+      redalert-java-api:latest
+    ```
 ## 6. API Python de IA (Interdependência)
 
 Esta API Java depende de um serviço externo de Inteligência Artificial (API Python) para:
@@ -185,4 +198,8 @@ O projeto segue uma estrutura padrão de aplicações Spring Boot, organizada em
 * `com.example.redalert.service`: Interfaces e implementações da lógica de negócio.
 * `com.example.redalert.client`: Clientes HTTP para comunicação com serviços externos (API Python, API C#).
 
+
+## 9. Vídeos
+* Demonstração: 
+* Pitch: 
 ---
