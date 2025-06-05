@@ -8,7 +8,7 @@ COPY src ./src
 
 RUN mvn clean package -DskipTests spring-boot:repackage
 
-FROM eclipse-temurin:17-jre-slim-jammy
+FROM eclipse-temurin:17-jre-jammy
 
 ARG APP_USER_NAME=appuser
 ARG APP_GROUP_NAME=appgroup
