@@ -45,12 +45,12 @@ public class AlertaController {
             @Valid @RequestBody AlertaRequestDTO alertaRequestDTO,
             @Parameter(hidden = true) @AuthenticationPrincipal UserDetails userDetails) {
         
-        UsuarioResponseDTO usuarioLogado = usuarioService.getUsuarioAutenticado(userDetails);
-        Long userId = usuarioLogado.getId();
+        UsuarioResponseDTO usuarioLogadoInfo = usuarioService.getUsuarioAutenticado(userDetails);
+        Long userId = usuarioLogadoInfo.getId();
 
-        AlertaResponseDTO novoAlerta = alertaUsuarioService.criarAlerta(alertaRequestDTO, userId);
+        AlertaResponseDTO novoAlertaResponse = alertaUsuarioService.criarAlerta(alertaRequestDTO, userId);
         
-        return new ResponseEntity<>(novoAlerta, HttpStatus.CREATED);
+        return new ResponseEntity<>(novoAlertaResponse, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Lista alertas com filtros e paginação (uso interno/específico)",
@@ -61,7 +61,7 @@ public class AlertaController {
     public ResponseEntity<Page<AlertaResponseDTO>> listarAlertas(
             @Parameter(description = "Filtros para a busca de alertas. Todos os campos são opcionais.") AlertaFiltrosDTO filtros,
             @PageableDefault(
-                size = 10, 
+                size = 20, 
                 sort = "timestampReporte",
                 direction = Sort.Direction.DESC
             )

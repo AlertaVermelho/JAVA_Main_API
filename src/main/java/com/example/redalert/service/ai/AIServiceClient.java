@@ -4,6 +4,9 @@ import com.example.redalert.dto.ai.AIClassificationRequestDTO;
 import com.example.redalert.dto.ai.AIClassificationResponseDTO;
 import com.example.redalert.exception.ai.AIClassificationException;
 import com.example.redalert.exception.ai.AIServiceException;
+import com.example.redalert.dto.ai.AIClusteringRequestDTO;
+import com.example.redalert.dto.ai.AIClusteringResponseDTO;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,6 +92,62 @@ public class AIServiceClient {
         } catch (Exception e) {
             logger.error("Erro inesperado ao chamar API de IA para classificação: {}", e.getMessage(), e);
             throw new AIServiceException("Ocorreu um erro inesperado ao processar com o serviço de IA.", e);
+        }
+    }
+
+    public AIClusteringResponseDTO clusterAlerts(AIClusteringRequestDTO requestDto) {
+        String clusterEndpointPath = "/ia/cluster_alerts";
+        String urlCompleta = pythonApiBaseUrl + clusterEndpointPath;
+        logger.debug("Chamando API de IA para clustering: URL={}, Payload AlertCount={}", urlCompleta, requestDto.getAlertsToCluster().size());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<AIClusteringRequestDTO> entity = new HttpEntity<>(requestDto, headers);
+
+        try {
+            ResponseEntity<AIClusteringResponseDTO> responseEntity = restTemplate.exchange(
+                    urlCompleta,
+                    HttpMethod.POST,
+                    entity,
+                    AIClusteringResponseDTO.class
+            );
+
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                AIClusteringResponseDTO responseBody = responseEntity.getBody();
+                if (responseBody != null) {
+                    logger.info("Resultados de clustering recebidos da API de IA: {} clusters, {} resultados de alertas.",
+                            responseBody.getHotspotSummaries() != null ? responseBody.getHotspotSummaries().size() : 0,
+                            responseBody.getClusteringResults() != null ? responseBody.getClusteringResults().size() : 0);
+                    return responseBody;
+                } else {
+                    logger.error("Resposta 2xx da API de IA para clustering, mas o corpo da resposta é nulo. URL: {}", urlCompleta);
+                    throw new AIServiceException("Resposta bem-sucedida do clustering da IA, mas corpo da resposta vazio.");
+                }
+            } else {
+                String responseBodyErrorString = "Corpo da resposta de erro não disponível ou nulo.";
+                if (responseEntity.hasBody()) {
+                    Object errorBody = responseEntity.getBody();
+                    if (errorBody != null) {
+                        responseBodyErrorString = errorBody.toString();
+                    }
+                }
+                logger.error("Resposta não sucedida da API de IA para clustering: Status={}, Body=[{}]",
+                        responseEntity.getStatusCode(), responseBodyErrorString);
+                throw new AIServiceException("Falha no clustering pela API de IA: Status " + responseEntity.getStatusCode());
+            }
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            logger.error("Erro HTTP ao chamar API de IA para clustering: Status={}, Body={}",
+                        e.getStatusCode(), e.getResponseBodyAsString(), e);
+            throw new AIServiceException("Erro de comunicação com o serviço de IA (clustering) (HTTP: " + e.getStatusCode() + "). Detalhes: " + e.getResponseBodyAsString(), e);
+        } catch (ResourceAccessException e) {
+            logger.error("Erro de acesso ao recurso (ex: timeout, conexão) ao chamar API de IA para clustering: {}", e.getMessage(), e);
+            throw new AIServiceException("Não foi possível conectar ao serviço de IA para clustering.", e);
+        } catch (RestClientException e) {
+            logger.error("Erro de RestClient ao chamar API de IA para clustering: {}", e.getMessage(), e);
+            throw new AIServiceException("Erro durante a comunicação com o serviço de IA (clustering).", e);
+        } catch (Exception e) {
+            logger.error("Erro inesperado ao chamar API de IA para clustering: {}", e.getMessage(), e);
+            throw new AIServiceException("Ocorreu um erro inesperado ao processar com o serviço de IA (clustering).", e);
         }
     }
 }

@@ -1,16 +1,24 @@
 package com.example.redalert.model;
 
-import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.Instant;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-// import org.hibernate.annotations.CreationTimestamp;
-
-import java.math.BigDecimal;
-import java.time.Instant;
 
 @Entity
 @Table(name = "ALERTAS_USUARIO")
@@ -56,10 +64,11 @@ public class AlertaUsuario {
     @Column(name = "tipo_ia", length = 30, nullable = true)
     private String tipoIA;
 
-    @Column(name = "id_hotspot_associado", nullable = true)
-    private Long idHotspotAssociado;
+    // @Column(name = "id_hotspot_associado", nullable=true)
+    // private Long idHotspotAssociado;
 
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "id_hotspot_associado", nullable = true)
-    // private HotspotsEventos hotspotAssociado;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_hotspot_associado", nullable = true)
+    private HotspotsEventos hotspotAssociado;
+
 }
